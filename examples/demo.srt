@@ -1,0 +1,20 @@
+1
+00:00:03,000 --> 00:00:09,000
+Today we will look at B-trees, a data structure designed for efficient disk access.
+
+2
+00:00:10,000 --> 00:00:17,000
+Each node stores several keys. This keeps the tree shallow even when the dataset grows.
+
+3
+00:00:18,000 --> 00:00:25,000
+Searching a balanced B-tree takes logarithmic time in the number of stored keys.
+
+4
+00:00:26,000 --> 00:00:34,000
+When a node becomes full during insertion, we split it and promote the middle key.
+
+5
+00:00:35,000 --> 00:00:42,000
+The split preserves balance. Every leaf stays at the same depth.
+

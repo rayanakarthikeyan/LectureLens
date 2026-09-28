@@ -1,0 +1,2 @@
+"""LectureLens local lecture library."""
+

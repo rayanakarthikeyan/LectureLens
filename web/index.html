@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101d2a">
+  <title>LectureLens — offline lecture explorer</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand"><div class="brand-mark">◉</div><div><strong>LectureLens</strong><span>STUDY WITH CONTEXT</span></div></div>
+      <button class="new-button" id="newLecture"><span>＋</span> New lecture</button>
+      <div class="section-label">YOUR LIBRARY</div>
+      <div id="lectureList" class="lecture-list"></div>
+      <div class="sidebar-bottom"><span class="status-dot"></span><span>Local workspace<br><small>Files stay on this PC</small></span></div>
+    </aside>
+
+    <main class="main-area">
+      <header class="topbar"><div class="crumb">Workspace <span>/</span> <strong id="crumbTitle">Overview</strong></div><div class="topbar-right"><span class="offline-pill">● Offline ready</span><button class="help-button" id="helpButton" title="How it works">?</button></div></header>
+
+      <div id="emptyView" class="empty-view">
+        <div class="hero-eyebrow">YOUR LECTURES, IN FOCUS</div>
+        <h1>Find the moment<br><em>it finally clicks.</em></h1>
+        <p>Bring a recording, transcript, or slide deck into one private workspace. Search what was said and what was shown, then jump straight to the source.</p>
+        <button class="primary-button" id="heroImport">Import a lecture <span>↗</span></button>
+        <div class="hero-feature-grid"><div><span class="feature-icon">◷</span><b>Timestamped answers</b><small>Search a concept and return to the exact moment.</small></div><div><span class="feature-icon">▧</span><b>Slides in context</b><small>Connect transcript passages to slide pages.</small></div><div><span class="feature-icon">◇</span><b>Private by design</b><small>Everything is stored and searched locally.</small></div></div>
+      </div>
+
+      <div id="lectureView" class="lecture-view hidden">
+        <div class="lecture-heading"><div><div class="eyebrow">LECTURE WORKSPACE</div><h1 id="lectureTitle"></h1><p id="lectureMeta"></p></div><div class="heading-actions"><button class="outline-button" id="importAnother">＋ Add lecture</button></div></div>
+        <div class="search-wrap"><span class="search-icon">⌕</span><input id="searchInput" type="search" placeholder="Search the lecture for a concept, phrase, or formula…" autocomplete="off"><kbd>↵</kbd></div>
+        <div class="tabs"><button class="tab active" data-tab="timeline">Timeline</button><button class="tab" data-tab="search">Search results <span id="resultCount"></span></button></div>
+        <div class="content-grid">
+          <section class="content-card">
+            <div class="card-heading"><div><span class="overline" id="listOverline">LECTURE TRANSCRIPT</span><h2 id="listTitle">Timeline</h2></div><span class="count-chip" id="segmentCount"></span></div>
+            <div id="timelinePanel" class="scroll-panel"></div>
+            <div id="resultsPanel" class="scroll-panel hidden"></div>
+          </section>
+          <div class="right-column">
+            <section class="content-card player-card"><div class="card-heading"><div><span class="overline">LISTEN BACK</span><h2>Recording</h2></div></div><div id="audioHost" class="audio-host"></div></section>
+            <section class="content-card slide-card"><div class="card-heading"><div><span class="overline">VISUAL CONTEXT</span><h2>Slides</h2></div><div class="page-controls"><button id="prevPage" aria-label="Previous slide">‹</button><span id="pageIndicator">—</span><button id="nextPage" aria-label="Next slide">›</button></div></div><div id="slideHost" class="slide-host"></div><div id="slideText" class="slide-text"></div></section>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <dialog id="importDialog" class="modal"><form id="importForm" method="dialog"><div class="modal-top"><div><span class="overline">START HERE</span><h2>Import a lecture</h2></div><button type="button" class="close-button" id="closeDialog" aria-label="Close">×</button></div><p class="modal-intro">Add what you have now. A transcript with timestamps unlocks jumps in the recording.</p><label class="field-label" for="titleField">Lecture title</label><input id="titleField" type="text" maxlength="120" placeholder="e.g. Data structures — B-trees" required><div class="upload-grid"><label class="upload-tile"><span class="upload-icon">♫</span><b>Recording</b><small>MP3, M4A, WAV, OGG or WebM · 120 MB max</small><input id="audioField" type="file" accept="audio/*,.mp4"><span class="chosen-name" id="audioName">Choose file</span></label><label class="upload-tile"><span class="upload-icon">▤</span><b>Slides</b><small>PDF · 30 MB max · up to 80 pages</small><input id="pdfField" type="file" accept=".pdf,application/pdf"><span class="chosen-name" id="pdfName">Choose file</span></label><label class="upload-tile"><span class="upload-icon">≡</span><b>Transcript</b><small>SRT, VTT or TXT · 4 MB max</small><input id="transcriptField" type="file" accept=".srt,.vtt,.txt,text/plain"><span class="chosen-name" id="transcriptName">Choose file</span></label></div><div id="importError" class="form-error" role="alert"></div><div class="modal-footer"><span>Processed on this device</span><button type="submit" class="primary-button" id="importSubmit">Create workspace <span>↗</span></button></div></form></dialog>
+  <dialog id="helpDialog" class="modal help-modal"><div class="modal-top"><div><span class="overline">QUICK GUIDE</span><h2>How LectureLens works</h2></div><button class="close-button" id="closeHelp" aria-label="Close">×</button></div><ol><li><b>Import a lecture.</b> Add an audio file, a slide PDF, and an SRT or VTT transcript. You can add just one file, but combining them gives the best experience.</li><li><b>Explore the timeline.</b> Click a timestamp to play from that moment. Select a slide number beside a passage to link the two.</li><li><b>Search with evidence.</b> Every result points to transcript text or a slide page. The app makes no ungrounded answers.</li></ol><p class="help-note">Offline transcription is available for 16 kHz mono 16-bit WAV when Qualcomm's Whisper sample or whisper.cpp is configured. See README.md for setup. The app does not use a cloud API.</p></dialog>
+  <div id="toast" class="toast" role="status"></div>
+  <script src="/app.js" defer></script>
+</body>
+</html>
